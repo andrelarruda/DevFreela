@@ -1,4 +1,5 @@
-﻿using DevFreela.API.Models;
+﻿using DevFreela.API.Entities;
+using DevFreela.API.Models;
 using DevFreela.API.Persistence;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -24,8 +25,13 @@ namespace DevFreela.API.Controllers
         }
 
         [HttpPost("{Id}/skills")]
-        public IActionResult PostSkills(UserSkillsInputModel model)
+        public IActionResult PostSkills(int id, UserSkillsInputModel model)
         {
+            var userSkills = model.SkillIds.Select(s => new UserSkill(id, s)).ToList();
+
+            _context.AddRange(userSkills);
+            _context.SaveChanges();
+
             return NoContent();
         }
 
