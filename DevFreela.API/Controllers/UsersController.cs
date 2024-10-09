@@ -28,11 +28,29 @@ namespace DevFreela.API.Controllers
             return NoContent();
         }
 
+        [HttpGet("{id}")]
+        public IActionResult GetById(int id)
+        {
+            var user = _context.Users.SingleOrDefault(x => x.Id == id);
+            if (user == null) {
+                return NotFound();
+            }
+            return Ok(GetUserViewModel.FromEntity(user));
+        }
+
         // POST api/users
         [HttpPost]
         public IActionResult Post(CreateUserInputModel model)
         {
-            return Ok();
+            var user = _context.Users.SingleOrDefault(u => u.FullName == model.FullName);
+            if (user != null) {
+                return BadRequest("User already exists.");
+            }
+
+            var entity = model.ToEntity();
+            var savedEntity = _context.Users.Add(entity);
+            _context.SaveChanges();
+            return CreatedAtAction(nameof(GetById), new { id = savedEntity.Entity.Id}, model);
         }
 
         // PUT api/users/1234/profile-picture
