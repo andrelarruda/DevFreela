@@ -1,6 +1,7 @@
 ﻿using DevFreela.API.Models;
 using DevFreela.API.Persistence;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace DevFreela.API.Controllers
 {
@@ -31,11 +32,15 @@ namespace DevFreela.API.Controllers
         [HttpGet("{id}")]
         public IActionResult GetById(int id)
         {
-            var user = _context.Users.SingleOrDefault(x => x.Id == id);
+            var user = _context.Users
+                .Include(u => u.Skills)
+                    .ThenInclude(u => u.Skill)
+                .SingleOrDefault(x => x.Id == id);
+
             if (user == null) {
                 return NotFound();
             }
-            return Ok(GetUserViewModel.FromEntity(user));
+            return Ok(UserViewModel.FromEntity(user));
         }
 
         // POST api/users
