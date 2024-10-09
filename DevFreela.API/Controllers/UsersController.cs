@@ -1,4 +1,5 @@
 ﻿using DevFreela.API.Models;
+using DevFreela.API.Persistence;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DevFreela.API.Controllers
@@ -7,6 +8,13 @@ namespace DevFreela.API.Controllers
     [ApiController]
     public class UsersController : ControllerBase
     {
+        private readonly DevFreelaDbContext _context;
+
+        public UsersController(DevFreelaDbContext context)
+        {
+            _context = context;
+        }
+
         // GET api/users
         [HttpGet]
         public IActionResult GetAll()
