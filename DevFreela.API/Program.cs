@@ -13,7 +13,10 @@ builder.Services.Configure<FreelanceTotalCostConfig>(
 
 builder.Services.AddSingleton<IConfigService, ConfigService>();
 
-builder.Services.AddDbContext<DevFreelaDbContext>(o => o.UseSqlServer(builder.Configuration.GetConnectionString("DevFreelaCs")));
+builder.Services.AddDbContext<DevFreelaDbContext>(options =>
+{
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DevFreelaCs"));
+});
 
 builder.Services.AddExceptionHandler<ApiExceptionHandler>();
 builder.Services.AddProblemDetails();
