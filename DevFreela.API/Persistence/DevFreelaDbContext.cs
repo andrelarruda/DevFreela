@@ -18,106 +18,64 @@ namespace DevFreela.API.Persistence
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
+            builder
+                .Entity<Skill>(e =>
+                {
+                    e.HasKey(s => s.Id);
+                });
+
+            builder
+                .Entity<User>(e =>
+                {
+                    e.HasKey(us => us.Id);
+                });
+
             builder.Entity<User>()
-                .HasKey(u => u.Id);
-
-            builder.Entity<Project>()
-                .HasKey(p => p.Id);
-
-            builder.Entity<Skill>()
-                .HasKey(s => s.Id);
-
-            builder.Entity<Project>()
-                .HasOne(p => p.Client)
-                .WithMany(c => c.OwnedProjects)
-                .HasForeignKey(p => p.IdClient);
-
-            builder.Entity<Project>()
-                .HasOne(p => p.Freelancer)
-                .WithMany(f => f.FreelanceProjects)
-                .HasForeignKey(p => p.IdFreelancer);
-
-            builder.Entity<Project>()
-                .HasMany(p => p.Comments)
-                .WithOne(pc => pc.Project);
-
-            builder.Entity<UserSkill>()
-                .HasKey(us => new { us.IdUser, us.IdSkill });
-
-            builder.Entity<UserSkill>()
-                .HasOne(us => us.User)
-                .WithMany(u => u.Skills)
-                .HasForeignKey(us => us.IdUser)
+                .HasMany(u => u.OwnedProjects)
+                .WithOne(p => p.Client)
+                .HasForeignKey(e => e.IdClient)
                 .OnDelete(DeleteBehavior.Restrict);
 
-            builder.Entity<UserSkill>()
-                .HasOne(us => us.Skill)
-                .WithMany(s => s.UserSkills)
-                .HasForeignKey(us => us.IdSkill)
+            builder.Entity<User>()
+                .HasMany(u => u.FreelanceProjects)
+                .WithOne(p => p.Freelancer)
+                .HasForeignKey(e => e.IdFreelancer)
                 .OnDelete(DeleteBehavior.Restrict);
 
-            builder.Entity<User>(u => {
-                u.HasMany(u => u.Skills)
-                .WithOne(us => us.User)
-                .HasForeignKey(u => u.IdUser)
-                .OnDelete(DeleteBehavior.Restrict);
-                
-            });
 
-            builder.Entity<ProjectComment>(e =>
-            {
-                e.HasKey(p => p.Id);
+            builder.Entity<UserSkill>(e =>
+                {
+                    e.HasKey(us => us.Id);
+
+                    e.HasOne(e => e.User)
+                        .WithMany(e => e.Skills)
+                        .HasForeignKey(us => us.UserId)
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    e.HasOne(u => u.Skill)
+                        .WithMany(u => u.UserSkills)
+                        .HasForeignKey(s => s.SkillId)
+                        .OnDelete(DeleteBehavior.Restrict);
+                });
+
+            builder
+                .Entity<ProjectComment>(e =>
+                {
+                    e.HasKey(p => p.Id);
+
+                    e.HasOne(p => p.Project)
+                        .WithMany(pr => pr.Comments)
+                        .HasForeignKey(x => x.projectId)
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    e.HasOne(c => c.User)
+                        .WithMany(u => u.Comments)
+                        .HasForeignKey(e => e.userId)
+                        .OnDelete(DeleteBehavior.Restrict);
+                });
 
 
-            });
-
-            //builder
-            //    .Entity<Skill>(e =>
-            //    {
-            //        e.HasKey(s => s.Id);
-            //    });
-
-            //builder
-            //    .Entity<UserSkill>(e => {
-            //        e.HasKey(us => us.Id);
-
-            //        e.HasOne(u => u.Skill)
-            //            .WithMany(u => u.UserSkills)
-            //            .HasForeignKey(s => s.IdSkill)
-            //            .OnDelete(DeleteBehavior.Restrict);
-
-            //        //e.HasOne(u => u.User)
-            //        //    .WithMany(u => u.Skills)
-            //        //    .HasForeignKey(us => us.IdUser)
-            //        //    .OnDelete(DeleteBehavior.Restrict);
-            //    });
-
-            //builder
-            //    .Entity<ProjectComment>(e =>
-            //    {
-            //        e.HasKey(p => p.Id); 
-
-            //        e.HasOne(p => p.Project)
-            //            .WithMany(pr => pr.Comments)
-            //            .HasForeignKey(x => x.IdProject)
-            //            .OnDelete(DeleteBehavior.Restrict);
-            //    });
-
-            //builder
-            //    .Entity<User>(e =>
-            //    {
-            //        e.HasKey(us => us.Id);
-
-            //        e.HasMany(u => u.Skills)
-            //            .WithOne(us => us.User)
-            //            .HasForeignKey(us => us.IdUser)
-            //            .OnDelete(DeleteBehavior.Restrict);
-            //    });
-
-            
-
-            //base.OnModelCreating(builder);
-
+            base.OnModelCreating(builder);
         }
     }
 }

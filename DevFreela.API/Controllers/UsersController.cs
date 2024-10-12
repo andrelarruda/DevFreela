@@ -21,10 +21,15 @@ namespace DevFreela.API.Controllers
         [HttpGet]
         public IActionResult GetAll()
         {
-            return new OkObjectResult("UsersController!");
+            var model = _context.Users
+                .Include(u => u.Skills)
+                    .ThenInclude(us => us.Skill)
+                .Select(UserViewModel.FromEntity)
+                .ToList();
+            return Ok(model);
         }
 
-        [HttpPost("{Id}/skills")]
+        [HttpPost("{id}/skills")]
         public IActionResult PostSkills(int id, UserSkillsInputModel model)
         {
             var userSkills = model.SkillIds.Select(s => new UserSkill(id, s)).ToList();
