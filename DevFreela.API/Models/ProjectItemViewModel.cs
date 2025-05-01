@@ -1,8 +1,8 @@
-﻿using DevFreela.API.Entities;
-using DevFreela.API.Enums;
+﻿using DevFreela.Core.Entities;
+using DevFreela.Core.Enums;
 using Microsoft.Data.SqlClient;
 
-namespace DevFreela.API.Models
+namespace DevFreela.Core.Models
 {
     public class ProjectItemViewModel
     {

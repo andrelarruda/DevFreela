@@ -1,13 +1,10 @@
-﻿using DevFreela.API.Entities;
-using DevFreela.API.Models;
-using DevFreela.API.Persistence;
-using DevFreela.API.Services;
-using Microsoft.AspNetCore.Http;
+﻿using DevFreela.Core.Entities;
+using DevFreela.Core.Models;
+using DevFreela.Core.Persistence;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Options;
 
-namespace DevFreela.API.Controllers
+namespace DevFreela.Core.Controllers
 {
     [Route("api/projects")]
     [ApiController]

@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 
-namespace DevFreela.API.ExceptionHandler
+namespace DevFreela.Core.ExceptionHandler
 {
     public class ApiExceptionHandler : IExceptionHandler
     {

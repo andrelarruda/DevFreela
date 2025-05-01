@@ -1,10 +1,10 @@
-﻿using DevFreela.API.Entities;
-using DevFreela.API.Models;
-using DevFreela.API.Persistence;
+﻿using DevFreela.Core.Entities;
+using DevFreela.Core.Models;
+using DevFreela.Core.Persistence;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
-namespace DevFreela.API.Controllers
+namespace DevFreela.Core.Controllers
 {
     [Route("api/skills")]
     [ApiController]

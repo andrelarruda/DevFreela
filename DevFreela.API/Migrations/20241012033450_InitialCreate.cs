@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace DevFreela.API.Migrations
+namespace DevFreela.Core.Migrations
 {
     /// <inheritdoc />
     public partial class InitialCreate : Migration
