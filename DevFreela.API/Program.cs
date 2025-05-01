@@ -1,6 +1,6 @@
 using DevFreela.Core.ExceptionHandler;
 using DevFreela.Core.Models;
-using DevFreela.Core.Persistence;
+using DevFreela.Infrastructure.Persistence;
 using DevFreela.Core.Services;
 using Microsoft.EntityFrameworkCore;
 
