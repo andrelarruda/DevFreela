@@ -21,7 +21,7 @@ namespace DevFreela.API.Controllers
 
         // GET api/projects?search=crm
         [HttpGet]
-        public IActionResult Get(string search = "", int page = 0, int size = 3)
+        public IActionResult Get(string search = "", int page = 0, int size = 10)
         {
             var projects = _context.Projects
                 .Include(p => p.Client)
