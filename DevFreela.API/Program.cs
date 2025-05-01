@@ -1,7 +1,6 @@
 using DevFreela.Core.ExceptionHandler;
-using DevFreela.Core.Models;
+using DevFreela.Application.Models;
 using DevFreela.Infrastructure.Persistence;
-using DevFreela.Core.Services;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -10,8 +9,6 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.Configure<FreelanceTotalCostConfig>(
     builder.Configuration.GetSection("FreelanceTotalCostConfig")
 );
-
-builder.Services.AddSingleton<IConfigService, ConfigService>();
 
 builder.Services.AddDbContext<DevFreelaDbContext>(options =>
 {

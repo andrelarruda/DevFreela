@@ -2,7 +2,7 @@
 using DevFreela.Core.Enums;
 using Microsoft.Data.SqlClient;
 
-namespace DevFreela.Core.Models
+namespace DevFreela.Application.Models
 {
     public class ProjectItemViewModel
     {
