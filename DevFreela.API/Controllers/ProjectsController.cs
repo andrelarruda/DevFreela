@@ -3,6 +3,7 @@ using DevFreela.Application.Models;
 using DevFreela.Infrastructure.Persistence;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using DevFreela.Application.Services;
 
 namespace DevFreela.Core.Controllers
 {
@@ -11,68 +12,54 @@ namespace DevFreela.Core.Controllers
     public class ProjectsController : ControllerBase
     {
         private readonly DevFreelaDbContext _context;
-        public ProjectsController(DevFreelaDbContext context) // configurado no Program.cs antes
+        private readonly IProjectService _service;
+
+        public ProjectsController(DevFreelaDbContext context, IProjectService service) // configurado no Program.cs antes
         {
             _context = context;
+            _service = service;
         }
 
         // GET api/projects?search=crm
         [HttpGet]
         public IActionResult Get(string search = "", int page = 0, int size = 10)
         {
-            var projects = _context.Projects
-                .Include(p => p.Client)
-                .Include(p => p.Freelancer)
-                .Include(p => p.Comments)
-                .Where(p => !p.IsDeleted
-                    && (search == "" || p.Title.Contains(search) || p.Description.Contains(search)))
-                .Skip(page * size)
-                .Take(size)
-                .ToList();
+            var result = _service.GetAll();
 
-            var model = projects.Select(ProjectItemViewModel.FromEntity).ToList();
-            return Ok(model);
+            return Ok();
         }
 
         // GET api/projects/1234
         [HttpGet("{id}")]
         public IActionResult GetById(int id) {
-            var project = _context.Projects
-                .Include(p => p.Freelancer)
-                .Include(p => p.Client)
-                .Include(p => p.Comments)
-                .SingleOrDefault(p => p.Id == id);
+            var result = _service.GetById(id);
 
-            ProjectItemViewModel model = ProjectItemViewModel.FromEntity(project);
-            return Ok(model);
+            if (!result.IsSuccess)
+            {
+                return BadRequest(result.Message);
+            }
+            return Ok(result);
         }
 
         // POST api/projects
         [HttpPost]
         public IActionResult Post(CreateProjectInputModel model)
         {
-            var project = model.ToEntity();
+            var result = _service.Insert(model);
 
-            var result = _context.Projects.Add(project);
-            _context.SaveChanges();
-            //                           action,  param da action, model
-            return CreatedAtAction(nameof(GetById), new { id = result.Entity.Id }, model); 
+            return CreatedAtAction(nameof(GetById), new { id = result.Data }, model); 
         }
 
         // PUT api/projects/1234
         [HttpPut("{id}")]
         public IActionResult Put(int id, UpdateProjectInputModel model)
         {
-            var project = _context.Projects.SingleOrDefault(p => p.Id == id);
-            if (project is null)
+            var result = _service.Update(id, model);
+
+            if (!result.IsSuccess)
             {
-                return NotFound();
+                return BadRequest(result.Message);
             }
-
-            project.Update(model.Title, model.Description, model.TotalCost);
-
-            _context.Projects.Update(project);
-            _context.SaveChanges();
 
             return NoContent();
         }
@@ -80,15 +67,13 @@ namespace DevFreela.Core.Controllers
         // DELETE api/projects/1234
         [HttpDelete("{id}")]
         public IActionResult Delete(int id) {
-            var project = _context.Projects.SingleOrDefault(p => p.Id == id);
-            if (project is null)
+            var result = _service.Delete(id);
+
+            if (!result.IsSuccess)
             {
-                return NotFound();
+                return BadRequest(result.Message);
             }
 
-            project.SetAsDeleted();
-            _context.Projects.Update(project);
-            _context.SaveChanges();
             return NoContent();
         }
 
@@ -96,16 +81,13 @@ namespace DevFreela.Core.Controllers
         [HttpPut("{id}/start")]
         public IActionResult Start(int id)
         {
-            var project = _context.Projects.SingleOrDefault(p => p.Id == id);
-            if (project is null)
+            var result = _service.Start(id);
+
+            if (!result.IsSuccess)
             {
-                return NotFound();
+                return BadRequest(result.Message);
             }
 
-            project.Start();
-
-            _context.Projects.Update(project);
-            _context.SaveChanges();
             return NoContent();
         }
 
@@ -113,15 +95,13 @@ namespace DevFreela.Core.Controllers
         [HttpPut("{id}/complete")]
         public IActionResult Complete(int id)
         {
-            var project = _context.Projects.SingleOrDefault(p => p.Id == id);
-            if (project is null)
+            var result = _service.Complete(id);
+
+            if (!result.IsSuccess)
             {
-                return NotFound();
+                return BadRequest(result.Message);
             }
 
-            project.Complete();
-            _context.Projects.Update(project);
-            _context.SaveChanges();
             return NoContent();
         }
 
@@ -129,19 +109,14 @@ namespace DevFreela.Core.Controllers
         [HttpPost("{id}/comments")]
         public IActionResult PostComment(int id, CreateProjectCommentInputModel model)
         {
-            var project = _context.Projects.SingleOrDefault(p => p.Id == id);
-            if (project is null)
+            var result = _service.InsertComment(id, model);
+
+            if (!result.IsSuccess)
             {
-                return NotFound();
+                return BadRequest(result.Message);
             }
 
-            var comment = new ProjectComment(model.Content, model.IdProject, model.IdUser);
-
-            _context.ProjectComments.Add(comment);
-            _context.SaveChanges();
-
-            // PAREI EM 8:06
-            return Ok();
+            return NoContent();
         }
 
     }
