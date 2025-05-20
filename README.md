@@ -1,16 +1,64 @@
 # DevFreela
 
-## The project
+## 📌 About the Project
 
-It's a Web API created using .NET Core, Entity Framework and SQL Server, in order to practice Entity Framework Core concepts.
+**DevFreela** is a Web API built with .NET Core, Entity Framework Core, and SQL Server, designed to simulate a real-world freelancing platform. The goal of this project is to apply key backend development concepts such as entity modeling, data relationships, and domain-driven design.
 
-The API was created during LuisDev's .NET Start mentorship, under Entity Framework module.
+This project was developed during the **.NET Start Mentorship lessons** by **[Luis Dev](https://www.luisdev.com.br/)**, under the Entity Framework and Clean Architecture modules.
+
+> 💡 The `main` branch contains the initial version using a traditional Web API structure.  
+> 🧱 The `CleanArchitecture` branch contains a refactored version of the project applying **Clean Architecture** principles, with a clear separation of concerns between Core, Application, Infrastructure, and API layers.
+
+---
 
 ## The API
 
-The API mimics an API used by developers to get freelancers jobs.
+The API mimics a freelancing platform where developers can find and work on software projects. It includes core features such as:
 
-## 👨‍💻 Used Programming Languages - Frameworks - Technologies - Tools  🛠
+- User registration and management
+- Project creation and assignment
+- Skill tagging
+- Commenting on projects
+
+---
+
+## 📘 Entities & Relationships
+
+Here’s an overview of the main entities and how they relate to each other:
+
+- **User**  
+  Represents both clients and freelancers.
+  - A user can be a **client** (project owner) or a **freelancer** (project executor).
+  - A user can **own multiple projects** (as a client).
+  - A user can **work on multiple projects** (as a freelancer).
+  - A user can **post multiple comments**.
+  - A user can have **multiple skills**.
+
+- **Project**
+  - Each project is **created/owned by one user** (client).
+  - Each project is **assigned to one user** (freelancer).
+  - A project can have **multiple comments**.
+
+- **Skill**
+  - A skill represents a technology or ability (e.g., C#, SQL, React).
+  - Each user can have **multiple skills** (many-to-many relationship).
+
+- **Comment**
+  - A comment is posted by a **user** on a **project**.
+  - A project can have **multiple comments**.
+  - A user can post **multiple comments**.
+
+---
+
+## 💡 Next Steps
+
+- Implement authentication/authorization (JWT)
+- Add unit and integration tests
+- Swagger/OpenAPI documentation
+
+---
+
+## 👨‍💻 Programming Languages - Frameworks - Technologies - Tools  🛠
 
 ![C#](https://img.shields.io/badge/c%23-%23239120.svg?style=for-the-badge&logo=csharp&logoColor=white)
 ![.Net](https://img.shields.io/badge/.NET-5C2D91?style=for-the-badge&logo=.net&logoColor=white)
